@@ -1,15 +1,11 @@
-FROM python:3.10.2-slim-bullseye
+FROM python:3.10.2-slim-bullseye AS builder
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-
-COPY ./requirements.txt .
+COPY requirements.txt .
 
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --user -r requirements.txt
 
-COPY . /app
 
-WORKDIR /app
-
+FROM python:3.10-slim-bullseye
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
