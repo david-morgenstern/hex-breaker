@@ -1,0 +1,5 @@
+docker build -t daveyo89/hex_breaker .
+docker push daveyo89/hex_breaker:latest
+
+docker run -it --rm --workdir=/app -v $PWD/:/app daveyo89/hex_breaker sh -c "python main.py breaker dave.xlsx 20"
+docker run -it --rm --workdir=/app -v $PWD/:/app daveyo89/hex_breaker:latest sh -c "python main.py breaker dave.xlsx 20"

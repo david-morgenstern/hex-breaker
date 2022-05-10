@@ -1,24 +1,29 @@
 #!/usr/bin/env python
+import os
 
+import fire as fire
 import pandas as pd
-import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--infile', type=argparse.FileType('r', encoding='UTF-8'),
-                    required=False)
-args = parser.parse_args()
-print("Entering main.py")
 
 
-def divide_chunks(lst, number):
-    for i in range(0, len(lst), number):
-        yield lst[i:i + number]
+class Breaker(object):
+    @staticmethod
+    def divide_chunks(lst, number):
+        for i in range(0, len(lst), number):
+            yield lst[i:i + number]
+
+    def breaker(self, path, col):
+        file_name_no_ext = os.path.splitext(path)[0]
+        df = pd.read_excel(path, header=None, names=['temp_col'])
+
+        print("Dividing columns...")
+        divided_columns_list = list(self.divide_chunks(list(df.temp_col), col))
+        new_df = pd.DataFrame(divided_columns_list).transpose()
+
+        print("Writing to file..")
+        new_df.to_excel(f'{file_name_no_ext}_result.xlsx', index=False, header=False)
+
+        print("Breaking complete.")
 
 
-df = pd.read_excel(args.infile.name, header=None, names=['szamok'])
-n = 30
-devi = list(divide_chunks(list(df.szamok), n))
-
-new_df = pd.DataFrame(devi).transpose()
-
-new_df.to_excel('test_end.xlsx')
+if __name__ == '__main__':
+    fire.Fire(Breaker)
