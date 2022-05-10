@@ -1,0 +1,1 @@
+docker run -it --rm --workdir=/app -v $PWD/:/app daveyo89/hex_breaker:latest sh -c "python main.py --infile excelfile.xlsx"
