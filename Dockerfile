@@ -8,4 +8,5 @@ RUN pip install --user -r requirements.txt
 
 FROM python:3.10-slim-bullseye
 COPY --from=builder /root/.local /root/.local
+COPY main.py /app/
 ENV PATH=/root/.local/bin:$PATH
